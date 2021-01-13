@@ -8,6 +8,7 @@ import androidx.work.*
 import com.jacee.examples.workmanager.databinding.ActivityWorkBinding
 import com.jacee.examples.workmanager.work.DelayWorker
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class WorkActivity : AppCompatActivity() {
@@ -20,6 +21,15 @@ class WorkActivity : AppCompatActivity() {
             binding = it
             it.root
         })
+
+        with(getId()) {
+            if (isNotEmpty()) {
+                WorkManager.getInstance(applicationContext)
+                    .getWorkInfoByIdLiveData(UUID.fromString(this)).observe({ lifecycle }) {
+                        Log.d(TAG, "init periodic: ${it.id}: ${it.state}")
+                    }
+            }
+        }
 
         binding.start.setOnClickListener {
             schedule()
@@ -43,6 +53,16 @@ class WorkActivity : AppCompatActivity() {
 
     }
 
+
+    private fun saveId(id: String) {
+        getSharedPreferences("data", MODE_PRIVATE).edit().putString("id", id.toString()).apply()
+    }
+
+    private fun getId(): String {
+        return getSharedPreferences("data", MODE_PRIVATE).getString("id", "") ?: ""
+    }
+
+
     private fun schedule() {
         val request = OneTimeWorkRequestBuilder<DelayWorker>().build()
         Log.d(TAG, "enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
@@ -65,6 +85,7 @@ class WorkActivity : AppCompatActivity() {
         }
         Log.d(TAG, "enqueue periodic on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
         binding.repeatStop.tag = request
+        saveId(request.id.toString())
 
         WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(request.id).observe({ lifecycle }) {
             Log.d(TAG, "periodic: ${it.id}: ${it.state}")
@@ -87,6 +108,7 @@ class WorkActivity : AppCompatActivity() {
     fun cancelAll(v: View) {
         Log.d(TAG, "cancel all")
         WorkManager.getInstance(applicationContext).cancelAllWork()
+        saveId("")
     }
 
 
