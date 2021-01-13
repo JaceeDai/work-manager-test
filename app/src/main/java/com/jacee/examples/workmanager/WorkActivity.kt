@@ -55,7 +55,7 @@ class WorkActivity : AppCompatActivity() {
 
 
     private fun saveId(id: String) {
-        getSharedPreferences("data", MODE_PRIVATE).edit().putString("id", id.toString()).apply()
+        getSharedPreferences("data", MODE_PRIVATE).edit().putString("id", id).apply()
     }
 
     private fun getId(): String {
