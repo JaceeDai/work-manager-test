@@ -1,5 +1,6 @@
 package com.jacee.examples.workmanager
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.View
 import androidx.work.*
 import com.jacee.examples.workmanager.databinding.ActivityWorkBinding
 import com.jacee.examples.workmanager.work.DelayWorker
+import com.jacee.examples.workmanager.work.FailedWorker
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -51,6 +53,10 @@ class WorkActivity : AppCompatActivity() {
             scheduleRepeatFlex()
         }
 
+        binding.startChain.setOnClickListener {
+            scheduleChain()
+        }
+
     }
 
 
@@ -77,6 +83,85 @@ class WorkActivity : AppCompatActivity() {
                 Log.d(TAG, "onetime: ${info.id}: ${info.state}")
             }
         })
+    }
+
+    @SuppressLint("EnqueueWork")
+    private fun scheduleChain() {
+        val request = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "1")
+                    .build()
+            )
+            .build()
+        val request2 = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "2")
+                    .putLong(DelayWorker.ARG_TEST_DURATION, 5_000L)
+                    .build()
+            )
+            .build()
+        val request3 = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "3")
+                    .putLong(DelayWorker.ARG_TEST_DURATION, 1_500L)
+                    .build()
+            )
+            .build()
+        val request4 = OneTimeWorkRequestBuilder<FailedWorker>().build()
+        val request5 = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "5")
+                    .putLong(DelayWorker.ARG_TEST_DURATION, 2_000L)
+                    .build()
+            )
+            .build()
+        val request6 = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "6")
+                    .putLong(DelayWorker.ARG_TEST_DURATION, 1_000L)
+                    .build()
+            )
+            .build()
+        Log.d(TAG, "chain enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
+
+        /*WorkManager.getInstance(applicationContext)
+            .beginWith(request)
+            .then(request4)
+            .then(request2)
+            .then(request3)
+            .apply {
+                workInfosLiveData.observe({lifecycle}) { l ->
+                    l.forEach {
+                        Log.d(TAG, "chain live: ${it.id}: ${it.state}")
+                    }
+                    Log.d(TAG, "----------------")
+                }
+            }
+            .enqueue()*/
+
+        WorkContinuation.combine(arrayListOf(
+            WorkManager.getInstance(applicationContext)
+                .beginWith(request2)
+                .then(request),
+            WorkManager.getInstance(applicationContext)
+                .beginWith(request4)
+                .then(request3),
+        ))
+            .then(request6)
+            .apply {
+                workInfosLiveData.observe({lifecycle}) { l ->
+                    l.forEach {
+                        Log.d(TAG, "chain live combine: ${it.id}: ${it.state}")
+                    }
+                    Log.d(TAG, "----------------")
+                }
+            }
+            .enqueue()
     }
 
     private fun scheduleRepeat() {

@@ -20,7 +20,7 @@
         android:id="@+id/repeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="40dp"
         android:text="Schedule Periodic"
         app:layout_constraintStart_toStartOf="@+id/start"
         app:layout_constraintTop_toBottomOf="@+id/start" />
@@ -29,7 +29,7 @@
         android:id="@+id/repeat_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Stop By Id"
         app:layout_constraintStart_toStartOf="@+id/repeat"
         app:layout_constraintTop_toBottomOf="@+id/repeat" />
@@ -40,16 +40,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
         android:text="Stop By Tag"
         app:layout_constraintStart_toEndOf="@+id/repeat_stop"
-        app:layout_constraintTop_toBottomOf="@+id/repeat" />
+        app:layout_constraintTop_toTopOf="@+id/repeat_stop" />
 
     <Button
         android:id="@+id/repeat_flex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="40dp"
         android:text="Schedule Periodic Flex"
         app:layout_constraintStart_toStartOf="@+id/start"
         app:layout_constraintTop_toBottomOf="@+id/repeat_stop" />
@@ -66,5 +65,15 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/start_chain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Schedule Chain"
+        app:layout_constraintStart_toStartOf="@+id/repeat_flex"
+        app:layout_constraintTop_toBottomOf="@+id/repeat_flex" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

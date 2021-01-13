@@ -16,12 +16,13 @@ class DelayWorker(context: Context, workerParams: WorkerParameters) : Worker(con
         val name = inputData.getString(ARG_NAME)
         Log.d(TAG, "[$name] doWork on ${Thread.currentThread().id} started - ${System.currentTimeMillis()}  -> $id")
         // emulated work
-        Thread.sleep(3000)
+        Thread.sleep(inputData.getLong(ARG_TEST_DURATION, 3_000L))
         Log.d(TAG, "[$name] doWork on ${Thread.currentThread().id} ended - ${System.currentTimeMillis()}")
         return Result.success()
     }
 
     companion object {
         const val ARG_NAME = "name"
+        const val ARG_TEST_DURATION = "duration"
     }
 }
