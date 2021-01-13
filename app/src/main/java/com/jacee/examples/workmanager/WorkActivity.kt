@@ -3,9 +3,8 @@ package com.jacee.examples.workmanager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import android.view.View
+import androidx.work.*
 import com.jacee.examples.workmanager.databinding.ActivityWorkBinding
 import com.jacee.examples.workmanager.work.DelayWorker
 import java.time.Duration
@@ -30,24 +29,47 @@ class WorkActivity : AppCompatActivity() {
             scheduleRepeat()
         }
 
+        binding.repeatStop.setOnClickListener {
+            cancelRepeat()
+        }
+
+        binding.repeatStopTag.setOnClickListener {
+            cancelRepeatByTag()
+        }
+
         binding.repeatFlex.setOnClickListener {
             scheduleRepeatFlex()
         }
+
     }
 
     private fun schedule() {
         val request = OneTimeWorkRequestBuilder<DelayWorker>().build()
         Log.d(TAG, "enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
-        WorkManager.getInstance(applicationContext).enqueue(request)
+        WorkManager.getInstance(applicationContext).enqueue(request.also {
+            WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(it.id).observe({lifecycle}) { info ->
+                Log.d(TAG, "periodic: ${info.id}: ${info.state}")
+            }
+        })
     }
 
     private fun scheduleRepeat() {
         val request = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            PeriodicWorkRequestBuilder<DelayWorker>(Duration.ofMillis(1000L)).build()
+            PeriodicWorkRequestBuilder<DelayWorker>(Duration.ofMillis(PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS))
+                .addTag("test_periodic")
+                .build()
         } else {
-            PeriodicWorkRequestBuilder<DelayWorker>(1000L, TimeUnit.MILLISECONDS).build()
+            PeriodicWorkRequestBuilder<DelayWorker>(PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
+                .addTag("test_periodic")
+                .build()
         }
         Log.d(TAG, "enqueue periodic on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
+        binding.repeatStop.tag = request
+
+        WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(request.id).observe({ lifecycle }) {
+            Log.d(TAG, "periodic: ${it.id}: ${it.state}")
+        }
+
         WorkManager.getInstance(applicationContext).enqueue(request)
     }
 
@@ -60,4 +82,24 @@ class WorkActivity : AppCompatActivity() {
         Log.d(TAG, "enqueue periodic with flex on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
         WorkManager.getInstance(applicationContext).enqueue(request)
     }
+
+
+    fun cancelAll(v: View) {
+        Log.d(TAG, "cancel all")
+        WorkManager.getInstance(applicationContext).cancelAllWork()
+    }
+
+
+    private fun cancelRepeat() {
+        (binding.repeatStop.tag as? PeriodicWorkRequest)?.let { request ->
+            Log.d(TAG, "cancel periodic: ${request.id}")
+            WorkManager.getInstance(applicationContext).cancelWorkById(request.id)
+        }
+    }
+
+    private fun cancelRepeatByTag() {
+        Log.d(TAG, "cancel periodic by tag")
+        WorkManager.getInstance(applicationContext).cancelAllWorkByTag("test_periodic")
+    }
+
 }

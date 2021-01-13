@@ -26,12 +26,45 @@
         app:layout_constraintTop_toBottomOf="@+id/start" />
 
     <Button
+        android:id="@+id/repeat_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Stop By Id"
+        app:layout_constraintStart_toStartOf="@+id/repeat"
+        app:layout_constraintTop_toBottomOf="@+id/repeat" />
+
+
+    <Button
+        android:id="@+id/repeat_stop_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Stop By Tag"
+        app:layout_constraintStart_toEndOf="@+id/repeat_stop"
+        app:layout_constraintTop_toBottomOf="@+id/repeat" />
+
+    <Button
         android:id="@+id/repeat_flex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:text="Schedule Periodic Flex"
         app:layout_constraintStart_toStartOf="@+id/start"
-        app:layout_constraintTop_toBottomOf="@+id/repeat" />
+        app:layout_constraintTop_toBottomOf="@+id/repeat_stop" />
+
+    <Button
+        android:id="@+id/cancel_all"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="cancelAll"
+        android:text="Cancel All"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
