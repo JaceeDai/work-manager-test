@@ -61,6 +61,10 @@ class WorkActivity : AppCompatActivity() {
             scheduleUniqueChain()
         }
 
+        binding.startConstraint.setOnClickListener {
+            scheduleConstraint()
+        }
+
     }
 
 
@@ -246,6 +250,22 @@ class WorkActivity : AppCompatActivity() {
             .enqueue()
     }
 
+    private fun scheduleConstraint() {
+        val builder = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "constraint one")
+                    .putBoolean(DelayWorker.ARG_TOAST_START, true)
+                    .build()
+            )
+
+        val constraint = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        Log.d(TAG, "enqueue with constraint")
+        WorkManager.getInstance(applicationContext).enqueue(builder.setConstraints(constraint).build())
+    }
 
     private fun scheduleRepeat() {
         val request = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
