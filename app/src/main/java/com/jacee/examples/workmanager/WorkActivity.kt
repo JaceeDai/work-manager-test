@@ -57,6 +57,10 @@ class WorkActivity : AppCompatActivity() {
             scheduleChain()
         }
 
+        binding.startUniqueChain.setOnClickListener {
+            scheduleUniqueChain()
+        }
+
     }
 
 
@@ -163,6 +167,58 @@ class WorkActivity : AppCompatActivity() {
             }
             .enqueue()
     }
+
+
+    private var uniqueIndex = 0
+
+    private fun scheduleUniqueChain() {
+        /*WorkManager.getInstance(applicationContext)
+            .beginUniqueWork(
+                "a_unique_name_of_one",
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequestBuilder<DelayWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DelayWorker.ARG_NAME, "unique_${++uniqueIndex}").build()
+                    )
+                    .build()
+                    .apply {
+                        WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(id).observe({ lifecycle }) {
+                            Log.d(TAG, "unique chain: ${it?.id ?: return@observe}: ${it.state}")
+                        }
+                    }
+            ).enqueue()*/
+
+        WorkManager.getInstance(applicationContext)
+            .beginUniqueWork(
+                "a_unique_name_of_two",
+                ExistingWorkPolicy.APPEND,
+                OneTimeWorkRequestBuilder<DelayWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DelayWorker.ARG_NAME, "unique_${++uniqueIndex}").build()
+                    )
+                    .build()
+                    .apply {
+                        WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(id).observe({ lifecycle }) {
+                            Log.d(TAG, "unique chain 1: ${it?.id ?: return@observe}: ${it.state}")
+                        }
+                    }
+            )
+            .then(OneTimeWorkRequestBuilder<DelayWorker>()
+                .setInputData(
+                    Data.Builder()
+                        .putString(DelayWorker.ARG_NAME, "unique_${++uniqueIndex}").build()
+                )
+                .build()
+                .apply {
+                    WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(id).observe({ lifecycle }) {
+                        Log.d(TAG, "unique chain 2: ${it?.id ?: return@observe}: ${it.state}")
+                    }
+                })
+            .enqueue()
+    }
+
 
     private fun scheduleRepeat() {
         val request = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

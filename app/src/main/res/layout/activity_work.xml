@@ -75,5 +75,14 @@
         app:layout_constraintStart_toStartOf="@+id/repeat_flex"
         app:layout_constraintTop_toBottomOf="@+id/repeat_flex" />
 
+    <Button
+        android:id="@+id/start_unique_chain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Schedule Unique Chain"
+        app:layout_constraintStart_toStartOf="@+id/repeat_flex"
+        app:layout_constraintTop_toBottomOf="@+id/start_chain" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
