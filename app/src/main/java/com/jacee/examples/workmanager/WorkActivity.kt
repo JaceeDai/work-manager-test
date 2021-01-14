@@ -87,10 +87,14 @@ class WorkActivity : AppCompatActivity() {
             .build()
         Log.d(TAG, "enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
         WorkManager.getInstance(applicationContext).enqueue(request.also {
-            WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(it.id).observe({lifecycle}) { info ->
+            WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(it.id).observe({ lifecycle }) { info ->
                 Log.d(TAG, "onetime: ${info.id}: ${info.state}")
             }
-        })
+        }).also {
+            it.state.observe({ lifecycle }) { op ->
+                Log.d(TAG, "operation: $op")
+            }
+        }
     }
 
     @SuppressLint("EnqueueWork")
@@ -152,17 +156,19 @@ class WorkActivity : AppCompatActivity() {
             }
             .enqueue()*/
 
-        WorkContinuation.combine(arrayListOf(
-            WorkManager.getInstance(applicationContext)
-                .beginWith(request2)
-                .then(request),
-            WorkManager.getInstance(applicationContext)
-                .beginWith(request4)
-                .then(request3),
-        ))
+        WorkContinuation.combine(
+            arrayListOf(
+                WorkManager.getInstance(applicationContext)
+                    .beginWith(request2)
+                    .then(request),
+                WorkManager.getInstance(applicationContext)
+                    .beginWith(request4)
+                    .then(request3),
+            )
+        )
             .then(request6)
             .apply {
-                workInfosLiveData.observe({lifecycle}) { l ->
+                workInfosLiveData.observe({ lifecycle }) { l ->
                     l.forEach {
                         Log.d(TAG, "chain live combine: ${it.id}: ${it.state}")
                     }
@@ -309,7 +315,11 @@ class WorkActivity : AppCompatActivity() {
     private fun cancelRepeat() {
         (binding.repeatStop.tag as? PeriodicWorkRequest)?.let { request ->
             Log.d(TAG, "cancel periodic: ${request.id}")
-            WorkManager.getInstance(applicationContext).cancelWorkById(request.id)
+            WorkManager.getInstance(applicationContext).cancelWorkById(request.id).also {
+                it.state.observe({ lifecycle }) { op ->
+                    Log.d(TAG, "cancel repeat operation: $op")
+                }
+            }
         }
     }
 
