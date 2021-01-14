@@ -189,7 +189,7 @@ class WorkActivity : AppCompatActivity() {
                     }
             ).enqueue()*/
 
-        WorkManager.getInstance(applicationContext)
+        /*WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
                 "a_unique_name_of_two",
                 ExistingWorkPolicy.APPEND,
@@ -216,6 +216,33 @@ class WorkActivity : AppCompatActivity() {
                         Log.d(TAG, "unique chain 2: ${it?.id ?: return@observe}: ${it.state}")
                     }
                 })
+            .enqueue()*/
+
+        val name = "a_unique_name_of_three"
+        WorkManager.getInstance(applicationContext).getWorkInfosForUniqueWorkLiveData(name).observe({ lifecycle }) { l ->
+            l.forEach {
+                Log.d(TAG, "unique chain: ${it.id}: ${it.state}")
+            }
+        }
+        WorkManager.getInstance(applicationContext)
+            .beginUniqueWork(
+                name,
+                ExistingWorkPolicy.KEEP,
+                OneTimeWorkRequestBuilder<DelayWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DelayWorker.ARG_NAME, "unique_${++uniqueIndex}").build()
+                    )
+                    .build()
+            )
+            .then(
+                OneTimeWorkRequestBuilder<DelayWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DelayWorker.ARG_NAME, "unique_${++uniqueIndex}").build()
+                    )
+                    .build()
+            )
             .enqueue()
     }
 
