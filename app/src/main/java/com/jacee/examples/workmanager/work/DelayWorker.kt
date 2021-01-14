@@ -13,10 +13,15 @@ import com.jacee.examples.workmanager.TAG
 class DelayWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
-        Log.d(TAG, "doWork on ${Thread.currentThread().id} started - ${System.currentTimeMillis()}  -> $id")
+        val name = inputData.getString(ARG_NAME)
+        Log.d(TAG, "[$name] doWork on ${Thread.currentThread().id} started - ${System.currentTimeMillis()}  -> $id")
         // emulated work
         Thread.sleep(3000)
-        Log.d(TAG, "doWork on ${Thread.currentThread().id} ended - ${System.currentTimeMillis()}")
+        Log.d(TAG, "[$name] doWork on ${Thread.currentThread().id} ended - ${System.currentTimeMillis()}")
         return Result.success()
+    }
+
+    companion object {
+        const val ARG_NAME = "name"
     }
 }

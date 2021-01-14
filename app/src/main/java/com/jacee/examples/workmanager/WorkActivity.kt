@@ -64,11 +64,17 @@ class WorkActivity : AppCompatActivity() {
 
 
     private fun schedule() {
-        val request = OneTimeWorkRequestBuilder<DelayWorker>().build()
+        val request = OneTimeWorkRequestBuilder<DelayWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putString(DelayWorker.ARG_NAME, "ONE-TIME")
+                    .build()
+            )
+            .build()
         Log.d(TAG, "enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
         WorkManager.getInstance(applicationContext).enqueue(request.also {
             WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(it.id).observe({lifecycle}) { info ->
-                Log.d(TAG, "periodic: ${info.id}: ${info.state}")
+                Log.d(TAG, "onetime: ${info.id}: ${info.state}")
             }
         })
     }
