@@ -16,9 +16,10 @@ class RetriedWorker(context: Context, workerParams: WorkerParameters) : Worker(c
         Log.d(TAG, "RetriedWorker on ${Thread.currentThread().id} started - ${System.currentTimeMillis()}")
         // emulated work
         Thread.sleep(1_000)
-        Log.d(TAG, "RetriedWorker on ${Thread.currentThread().id} ended - ${System.currentTimeMillis()}")
-        val first = inputData.getBoolean(ARG_IS_FIRST, false)
-        return if (first) Result.retry() else Result.success()
+        val time = System.currentTimeMillis()
+        Log.d(TAG, "RetriedWorker on ${Thread.currentThread().id} ended - $time")
+//        val first = inputData.getBoolean(ARG_IS_FIRST, false)
+        return if (time.rem(3) == 0L) Result.retry() else Result.success()
     }
 
     companion object {

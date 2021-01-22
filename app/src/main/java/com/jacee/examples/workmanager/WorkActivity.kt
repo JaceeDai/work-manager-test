@@ -185,11 +185,12 @@ class WorkActivity : AppCompatActivity() {
 
     private fun scheduleRetry() {
         val request = OneTimeWorkRequestBuilder<RetriedWorker>()
-            .setInputData(
-                Data.Builder()
-                    .putBoolean(RetriedWorker.ARG_IS_FIRST, true)
-                    .build()
-            )
+//            .setInputData(
+//                Data.Builder()
+//                    .putBoolean(RetriedWorker.ARG_IS_FIRST, true)
+//                    .build()
+//            )
+            .setBackoffCriteria(BackoffPolicy.LINEAR, 15, TimeUnit.SECONDS)
             .build()
         Log.d(TAG, "enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
         WorkManager.getInstance(applicationContext).enqueue(request.also {
