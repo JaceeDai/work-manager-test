@@ -9,6 +9,7 @@ import androidx.work.*
 import com.jacee.examples.workmanager.databinding.ActivityWorkBinding
 import com.jacee.examples.workmanager.work.DelayWorker
 import com.jacee.examples.workmanager.work.FailedWorker
+import com.jacee.examples.workmanager.work.RetriedWorker
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -63,6 +64,10 @@ class WorkActivity : AppCompatActivity() {
 
         binding.startConstraint.setOnClickListener {
             scheduleConstraint()
+        }
+
+        binding.startRetry.setOnClickListener {
+            scheduleRetry()
         }
 
     }
@@ -176,6 +181,26 @@ class WorkActivity : AppCompatActivity() {
                 }
             }
             .enqueue()
+    }
+
+    private fun scheduleRetry() {
+        val request = OneTimeWorkRequestBuilder<RetriedWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putBoolean(RetriedWorker.ARG_IS_FIRST, true)
+                    .build()
+            )
+            .build()
+        Log.d(TAG, "enqueue on ${Thread.currentThread().id} ${System.currentTimeMillis()}")
+        WorkManager.getInstance(applicationContext).enqueue(request.also {
+            WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(it.id).observe({ lifecycle }) { info ->
+                Log.d(TAG, "retry: ${info.id}: ${info.state}")
+            }
+        }).also {
+            it.state.observe({ lifecycle }) { op ->
+                Log.d(TAG, "retry operation: $op")
+            }
+        }
     }
 
 

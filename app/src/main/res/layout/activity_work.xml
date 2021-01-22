@@ -93,5 +93,13 @@
         app:layout_constraintStart_toStartOf="@+id/repeat_flex"
         app:layout_constraintTop_toBottomOf="@+id/start_unique_chain" />
 
+    <Button
+        android:id="@+id/start_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="schedule retry"
+        app:layout_constraintStart_toStartOf="@+id/start_constraint"
+        app:layout_constraintTop_toBottomOf="@+id/start_constraint" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
