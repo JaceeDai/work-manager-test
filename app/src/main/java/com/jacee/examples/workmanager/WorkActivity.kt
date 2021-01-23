@@ -75,6 +75,10 @@ class WorkActivity : AppCompatActivity() {
             scheduleOutputList()
         }
 
+        binding.startOutputFailed.setOnClickListener {
+            scheduleOutputListFailed()
+        }
+
     }
 
 
@@ -226,6 +230,39 @@ class WorkActivity : AppCompatActivity() {
             .then(
                 OneTimeWorkRequestBuilder<DataWorker>().build()
             )
+            .enqueue()
+    }
+
+    private fun scheduleOutputListFailed() {
+        WorkManager.getInstance(applicationContext)
+            .beginWith(
+                OneTimeWorkRequestBuilder<DataWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DataWorker.ARG_NAME, "one")
+                            .build()
+                    )
+                    .build()
+            )
+            .then(
+                OneTimeWorkRequestBuilder<FailedWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putBoolean(FailedWorker.ARG_RESULT, true)
+                            .build()
+                    )
+                    .build()
+            )
+            .then(
+                OneTimeWorkRequestBuilder<DataWorker>().build()
+            ).apply {
+                workInfosLiveData.observe({ lifecycle }) { l ->
+                    l.forEach {
+                        Log.d(TAG, "fail output: ${it.id}, ${it.state}, ${it.outputData}")
+                    }
+                    Log.d(TAG, "----------------")
+                }
+            }
             .enqueue()
     }
 

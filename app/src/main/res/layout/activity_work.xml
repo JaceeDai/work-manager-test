@@ -1,113 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".WorkActivity">
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Schedule"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:context=".WorkActivity">
 
-    <Button
-        android:id="@+id/repeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Schedule Periodic"
-        app:layout_constraintStart_toStartOf="@+id/start"
-        app:layout_constraintTop_toBottomOf="@+id/start" />
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Schedule"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cancel_all" />
 
-    <Button
-        android:id="@+id/repeat_stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Stop By Id"
-        app:layout_constraintStart_toStartOf="@+id/repeat"
-        app:layout_constraintTop_toBottomOf="@+id/repeat" />
+        <Button
+            android:id="@+id/repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Schedule Periodic"
+            app:layout_constraintStart_toStartOf="@+id/start"
+            app:layout_constraintTop_toBottomOf="@+id/start" />
 
-
-    <Button
-        android:id="@+id/repeat_stop_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Stop By Tag"
-        app:layout_constraintStart_toEndOf="@+id/repeat_stop"
-        app:layout_constraintTop_toTopOf="@+id/repeat_stop" />
-
-    <Button
-        android:id="@+id/repeat_flex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Schedule Periodic Flex"
-        app:layout_constraintStart_toStartOf="@+id/start"
-        app:layout_constraintTop_toBottomOf="@+id/repeat_stop" />
-
-    <Button
-        android:id="@+id/cancel_all"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="cancelAll"
-        android:text="Cancel All"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/start_chain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Schedule Chain"
-        app:layout_constraintStart_toStartOf="@+id/repeat_flex"
-        app:layout_constraintTop_toBottomOf="@+id/repeat_flex" />
-
-    <Button
-        android:id="@+id/start_unique_chain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Schedule Unique Chain"
-        app:layout_constraintStart_toStartOf="@+id/repeat_flex"
-        app:layout_constraintTop_toBottomOf="@+id/start_chain" />
-
-    <Button
-        android:id="@+id/start_constraint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Schedule Constraint"
-        app:layout_constraintStart_toStartOf="@+id/repeat_flex"
-        app:layout_constraintTop_toBottomOf="@+id/start_unique_chain" />
-
-    <Button
-        android:id="@+id/start_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="schedule retry"
-        app:layout_constraintStart_toStartOf="@+id/start_constraint"
-        app:layout_constraintTop_toBottomOf="@+id/start_constraint" />
-
-    <Button
-        android:id="@+id/start_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="schedule data output"
-        app:layout_constraintStart_toStartOf="@+id/start_retry"
-        app:layout_constraintTop_toBottomOf="@+id/start_retry" />
+        <Button
+            android:id="@+id/repeat_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Stop By Id"
+            app:layout_constraintStart_toStartOf="@+id/repeat"
+            app:layout_constraintTop_toBottomOf="@+id/repeat" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/repeat_stop_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Stop By Tag"
+            app:layout_constraintStart_toEndOf="@+id/repeat_stop"
+            app:layout_constraintTop_toTopOf="@+id/repeat_stop" />
+
+        <Button
+            android:id="@+id/repeat_flex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Schedule Periodic Flex"
+            app:layout_constraintStart_toStartOf="@+id/start"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_stop" />
+
+        <Button
+            android:id="@+id/cancel_all"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="#E91E63"
+            android:onClick="cancelAll"
+            android:text="Cancel All"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/start_chain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Schedule Chain"
+            app:layout_constraintStart_toStartOf="@+id/repeat_flex"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_flex" />
+
+        <Button
+            android:id="@+id/start_unique_chain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Schedule Unique Chain"
+            app:layout_constraintStart_toStartOf="@+id/repeat_flex"
+            app:layout_constraintTop_toBottomOf="@+id/start_chain" />
+
+        <Button
+            android:id="@+id/start_constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Schedule Constraint"
+            app:layout_constraintStart_toStartOf="@+id/repeat_flex"
+            app:layout_constraintTop_toBottomOf="@+id/start_unique_chain" />
+
+        <Button
+            android:id="@+id/start_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="schedule retry"
+            app:layout_constraintStart_toStartOf="@+id/start_constraint"
+            app:layout_constraintTop_toBottomOf="@+id/start_constraint" />
+
+        <Button
+            android:id="@+id/start_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="schedule data output"
+            app:layout_constraintStart_toStartOf="@+id/start_retry"
+            app:layout_constraintTop_toBottomOf="@+id/start_retry" />
+
+        <Button
+            android:id="@+id/start_output_failed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="schedule data output failed"
+            app:layout_constraintStart_toStartOf="@+id/start_retry"
+            app:layout_constraintTop_toBottomOf="@+id/start_output" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+
