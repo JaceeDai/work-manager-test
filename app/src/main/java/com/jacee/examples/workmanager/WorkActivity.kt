@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.work.*
 import com.jacee.examples.workmanager.databinding.ActivityWorkBinding
+import com.jacee.examples.workmanager.work.DataWorker
 import com.jacee.examples.workmanager.work.DelayWorker
 import com.jacee.examples.workmanager.work.FailedWorker
 import com.jacee.examples.workmanager.work.RetriedWorker
@@ -68,6 +69,10 @@ class WorkActivity : AppCompatActivity() {
 
         binding.startRetry.setOnClickListener {
             scheduleRetry()
+        }
+
+        binding.startOutput.setOnClickListener {
+            scheduleOutputList()
         }
 
     }
@@ -202,6 +207,26 @@ class WorkActivity : AppCompatActivity() {
                 Log.d(TAG, "retry operation: $op")
             }
         }
+    }
+
+    private fun scheduleOutputList() {
+        WorkManager.getInstance(applicationContext)
+            .beginWith(
+                OneTimeWorkRequestBuilder<DataWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DataWorker.ARG_NAME, "one")
+                            .build()
+                    )
+                    .build()
+            )
+            .then(
+                OneTimeWorkRequestBuilder<DataWorker>().build()
+            )
+            .then(
+                OneTimeWorkRequestBuilder<DataWorker>().build()
+            )
+            .enqueue()
     }
 
 

@@ -101,5 +101,13 @@
         app:layout_constraintStart_toStartOf="@+id/start_constraint"
         app:layout_constraintTop_toBottomOf="@+id/start_constraint" />
 
+    <Button
+        android:id="@+id/start_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="schedule data output"
+        app:layout_constraintStart_toStartOf="@+id/start_retry"
+        app:layout_constraintTop_toBottomOf="@+id/start_retry" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
